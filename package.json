@@ -1,0 +1,37 @@
+{
+  "name": "braintrust-mono-repo",
+  "version": "1.0.0",
+  "description": "Braintrust Monorepo",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@openzeppelin/contracts": "^4.6.0",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.0",
+    "@typechain/truffle-v5": "^8.0.1",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.0.0",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.4",
+    "ethereumjs-util": "^7.1.5",
+    "ethers": "^5.6.8",
+    "hardhat": "^2.9.9",
+    "hardhat-deploy": "^0.11.10",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "solhint": "^3.3.7",
+    "solidity-bytes-utils": "^0.8.0",
+    "ts-node": "^10.8.1",
+    "typechain": "^8.1.0",
+    "typescript": "^4.7.3",
+    "web3": "^1.7.3",
+    "web3-utils": "^1.7.3"
+  },
+  "scripts": {
+    "compile": "yarn run hardhat compile",
+    "test": "yarn run hardhat test"
+  }
+}

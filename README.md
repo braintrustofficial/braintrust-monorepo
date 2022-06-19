@@ -7,3 +7,28 @@
 **Braintrust Monorepo - Repository for Braintrust contracts.**
 
 This repository contains the source code for Braintrust contracts.
+
+## Summary
+
+This is the git repository for the BTRST contracts. It contains a openzeppelin-based contracts and hardhat deployment and configuration for testing and deployment to various networks.
+
+## Requirements
+
+Node, NPM, Hardhat
+
+**NOTE:** If you are not familiar with Hardhat or with interacting with Ethereum as a developer, we suggest doing this tutorial first: https://hardhat.org/tutorial/
+
+## Installation
+
+### Setup
+Clone the repo, then:
+
+```bash
+yarn install
+```
+
+### Unit tests
+
+```bash
+yarn test
+```
