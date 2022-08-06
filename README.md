@@ -30,5 +30,17 @@ yarn install
 ### Unit tests
 
 ```bash
-yarn test
+yarn test-coverage
+```
+
+### Deploy
+`yarn deploy --network <NETWORK NAME>` e.g
+
+```bash
+yarn deploy --network goerli
+```
+You may want to verify deployment after that with 
+
+```
+yarn verify --network goerli
 ```

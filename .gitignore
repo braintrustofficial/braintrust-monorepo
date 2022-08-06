@@ -5,3 +5,4 @@ cache
 deployments/localhost/
 typechain-types
 .idea
+.env
