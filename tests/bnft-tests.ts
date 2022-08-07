@@ -38,20 +38,12 @@ describe("BNFT", () => {
 
     bnft = await upgrades.deployProxy(braintrustMembershipNFTFactory, [relayer.address, btrst.address, baseURL]);
     await bnft.deployed();
-    // bnft = (await braintrustMembershipNFTFactory.deploy(relayer.address, btrst.address)) as BraintrustMembershipNFT;
-    // await bnft.deployed();
 
     externalId = toBigNumber(Math.floor((Math.random() * 60000) + 1)); //Return a random number between 1 and 60000:
   });
 
 
   describe("#test()", () => {
-    // btrst: BTRST;
-    // beforeEach(async() => {
-    //   const factory = await ethers.getContractFactory("Brain")
-    //   await btrst
-    // })
-
     describe("#constructor()", () => {
       it("should have the right owner", async () => {
         expect(await bnft.owner()).to.equal(bnftContractOwner.address)
@@ -62,14 +54,26 @@ describe("BNFT", () => {
     });
 
     describe("#setBaseURI()", () => {
-       
-      it("should allow owner to setBaseURL", async () => {
+
+      it("should allow owner to set BaseURL", async () => {
         await bnft.connect(bnftContractOwner).setBaseURI("http://bar/");
         expect(await bnft.baseURI()).to.be.eq(`http://bar/`)
       });
 
-      it("should not allow a random address to setBaseURL", async () => {
+      it("should not allow a random address to se tBaseURL", async () => {
         await expect(bnft.connect(randomSigner).setBaseURI("http://bar/")).revertedWith("Ownable: caller is not the owner");
+      });
+    });
+
+    describe("#setRelayer()", () => {
+
+      it("should allow owner to set Relayer", async () => {
+        await bnft.connect(bnftContractOwner).setRelayer(randomSigner.address);
+        expect(await bnft.relayer()).to.be.eq(randomSigner.address)
+      });
+
+      it("should not allow a random address to set Relayer", async () => {
+        await expect(bnft.connect(randomSigner).setRelayer(randomSigner.address)).revertedWith("Ownable: caller is not the owner");
       });
     });
 
@@ -91,6 +95,14 @@ describe("BNFT", () => {
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
         expect(await bnft.tokenURI(0)).to.be.eq(`${baseURL}0`)
       });
+    });
+
+    describe("#_beforeTokenTransfer()", () => {
+      it.only("should prevent braintrust membership NFT token tranfers", async () => {
+        await bnft.connect(relayer).safeMint(freelancer.address, externalId);
+        await expect(bnft.connect(freelancer).transferFrom(freelancer.address, randomSigner.address, 0)).revertedWith("TransferNotAllowed()");
+      });
+
     });
 
     describe("#deposit()", () => {
@@ -265,6 +277,7 @@ describe("BNFT", () => {
         expect(await bnft.getTotalLockedDepositAmount(freelancer.address)).to.equal(2)
       });
 
+      // TODO: I NEED TO SPEND TIME TO FIND OUT WHY THIS IS NOT WORKING CORRECTLY!!!
       it.skip("should emit correct event", async () => {
         await fundRelayerApproveBtrstSafemintAndLock(10, 10, 10, 4 * DAY);
         await simulateTimeTravel(4 * DAY);
@@ -275,10 +288,3 @@ describe("BNFT", () => {
 
   });
 });
-
-//Todo tests
-// NFT can not be transsfered accross wallets
-
-// Notes
-// Multisig operation required to change Relayer?
-
