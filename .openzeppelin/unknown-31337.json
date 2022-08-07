@@ -2,31 +2,6 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0xba5f60af7b103cbd20896c8493e75c21df842c846ca964533e66cfbc6ffd514e",
-      "kind": "uups"
-    },
-    {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0x7f68cce9c661e007fab2d62d302a63ea9965a372309455149cca73b03353acfd",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x01ab4444b3cb45a6d1f7abd15ce41eba97f1c2021ab4244e2f0693681defc667",
-      "kind": "uups"
-    },
-    {
-      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0xe3390662d5c5252a54b1da64e5f5ccc06db50d072c77bc5e30fc350166f5f6d3",
-      "kind": "uups"
-    },
-    {
-      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-      "txHash": "0x23c936b9f3e19451938ba8c3b002e5d68122618e05e1c5458afad472dee0b78e",
-      "kind": "uups"
-    },
-    {
       "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
       "txHash": "0xe5d804afaf5d21782c0b301b0bd14916e1f3a92216acc51cd59d53bf88c7722d",
       "kind": "uups"
@@ -53,17 +28,17 @@
     },
     {
       "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
-      "txHash": "0xbb38f3f8173e4dedd890807c76e0051c607662b1b4d5e7cdb65ff423e0f46ff5",
+      "txHash": "0xc2d28339706d776b136b411c1cfca1bf428f5cb657f2e3fd5f9af226a1cc118c",
       "kind": "uups"
     },
     {
       "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-      "txHash": "0xf445ce577879b3096168bdb8af12da89e63af6fda3876754673cf6088bd84ce3",
+      "txHash": "0xd3f8272d2b5aa2c81c65851524a14f8e71475b131d850e10ce3872b043feedc3",
       "kind": "uups"
     },
     {
       "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "txHash": "0xa26f149c1171424bb96c9fdf8b770c21131002aa77229bd055b40b523f70ff9b",
+      "txHash": "0xe824d881025338f98ac33c11c6186010f92f7ce20466cc0b49dc05fe41876382",
       "kind": "uups"
     },
     {
@@ -145,12 +120,172 @@
       "address": "0xFD471836031dc5108809D173A067e8486B9047A3",
       "txHash": "0x7c5a72383f62549c918d6df7cd36f4f3f30b6e3802bde745e75e3fd143a4d02d",
       "kind": "uups"
+    },
+    {
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x9a7cfcb46788bcb7219d5f907115c22f25be08b4d025e72c1c29d45ce68f8da9",
+      "kind": "uups"
+    },
+    {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x7a765597504c4f1844f122622b370b1ae8adfc852a25f66b41195133ffe652e1",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0x462511c4f993ee1b967b5fb24a6bfd0bc46e03280bb518fc2349af36d8783e15",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "txHash": "0x1cf0631ee11b4e569147e68b0f6c209f7abe9f8d456f354c7369b5cae0bbb849",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0x38d1fc91f158d23c50d774d043c3f77f4cd058cb68e52245168020bc4d10bed7",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0x89a45db362934d2da2165d56b302e0c7f7bf62bf5bb3288a816f06f8e1af2913",
+      "kind": "uups"
+    },
+    {
+      "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+      "txHash": "0x3ead7b0e89900e0d3acd9d573c70f56a18550d8e71e690053fad5f2d6d895e9d",
+      "kind": "uups"
+    },
+    {
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "txHash": "0x1fd8786e2fadfe096aabfc47a66b854e658d783c4c82a2f581b48c26561df2f0",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "txHash": "0x7f767f2b64a9984150abdb49edfd42b14f4444b7b1fd764ae115aaf43f1298fc",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      "txHash": "0xf8421368ef1826816964d2f764721254e8803bbfa70d87408e9a4830054fbc36",
+      "kind": "uups"
+    },
+    {
+      "address": "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f",
+      "txHash": "0xd03a0c88d4f63283969e5fa6b39f053ab39a1777d2ee1096d106eb142aaba7cb",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
+      "txHash": "0xc23bb4f894559a0bc91bc5330748fdd39aeaef683466611560be33dd29ad573e",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+      "txHash": "0xe164eef4378fc2fce42fc026ff623bd55da14388c1151eaed46da833c30b3a48",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+      "txHash": "0x95e7a602d6b08bc8931ed3b597da350ca3b0c25a42df3888870ac422524d0c7c",
+      "kind": "uups"
+    },
+    {
+      "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+      "txHash": "0x2bb26a01bb774b9d1be57f88cdec77729b4323dac295bafda3086a2a1870dbbf",
+      "kind": "uups"
+    },
+    {
+      "address": "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
+      "txHash": "0xc5b0af942935dc76c0a45641bc54c33e4c436db09dbd292c897bad7d8e8eb7de",
+      "kind": "uups"
+    },
+    {
+      "address": "0x851356ae760d987E095750cCeb3bC6014560891C",
+      "txHash": "0xe4fad5b271bdd57bdaa234bc2fb4e5ba7b8101c9fe7ac86f12b68c8818f93280",
+      "kind": "uups"
+    },
+    {
+      "address": "0x95401dc811bb5740090279Ba06cfA8fcF6113778",
+      "txHash": "0x8ca37314b003f6351a73ebdff3ab5faa1e37bdc39bb7286b76cc6a510c4033a4",
+      "kind": "uups"
+    },
+    {
+      "address": "0x70e0bA845a1A0F2DA3359C97E0285013525FFC49",
+      "txHash": "0x3f8443e158474e7036cce1d3084d20bdc4e4768758a7d1e4140c661a7cbc4be3",
+      "kind": "uups"
+    },
+    {
+      "address": "0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf",
+      "txHash": "0x10929e4129a55e99576525f4cb3ef7ed681e4632c4d48f6b9d6925bdf14ca1a7",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
+      "txHash": "0xcaea46041e82680db697144fc4aab98a7cf144aadf33b70e00a33e24ee4b4c4f",
+      "kind": "uups"
+    },
+    {
+      "address": "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
+      "txHash": "0xe5387ca6aef53a30053725ed635a0f80057a34437bf686eca5916c2bad007af1",
+      "kind": "uups"
+    },
+    {
+      "address": "0x809d550fca64d94Bd9F66E60752A544199cfAC3D",
+      "txHash": "0x0be9629f9b46d67b9440473d8077048610af6a5c35f74c5f8a704fcb37eada8b",
+      "kind": "uups"
+    },
+    {
+      "address": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
+      "txHash": "0x04919ef530c877a8e8b0421d87ff37495ce98f748606b693c6d1df9be1c89216",
+      "kind": "uups"
+    },
+    {
+      "address": "0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575",
+      "txHash": "0xbfe75d5b487b39a6653c0f0a3675060283c2b00653ee325a3f7c0e26a47b0e82",
+      "kind": "uups"
+    },
+    {
+      "address": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
+      "txHash": "0x2fd638e2798db8dcc95d098f23e4fe4dbe1b855b43523b582f7b659b32906784",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+      "txHash": "0x4001f1420ecfb25c10bc0d1b9a98ac558a29fe538a6e7a28dd355586c0b83bf4",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc351628EB244ec633d5f21fBD6621e1a683B1181",
+      "txHash": "0x7b77ed05e0f8eac071c6d673dc88c0b8b5e70fae119df9b0c1438683f2f35632",
+      "kind": "uups"
+    },
+    {
+      "address": "0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc",
+      "txHash": "0x2e7154b88f4ba14a510a739113412d1329ff41f1de37742f543da7bba7410135",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB0D4afd8879eD9F52b28595d31B441D079B2Ca07",
+      "txHash": "0x09c7c2d3fa1b7e746ed6dd7015cc74455f29f7381a916b9caa185a10d6a09666",
+      "kind": "uups"
+    },
+    {
+      "address": "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
+      "txHash": "0xc3d3d43cc0ba0c918955e1311c286924893ccfc60699f32a7453f105e4d9b89e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0x60ce36cd72a233f4959a9028348599e98d4111a9bd137cb9877e571103f76d12",
+      "kind": "uups"
     }
   ],
   "impls": {
-    "94612a3c75ea8b3882469cd2b50a2ba73c660d882db6fca5011ebd17dbcb24e6": {
+    "57912717aaa070cb0ba3656b164573ccb8f180ae72903fd09f152f74a09a6f74": {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0x30801dd7665cf34edaac8d5b5963e1007eb18204543fa24877c72ebaedaea470",
+      "txHash": "0xb330b6bd284426e03081c549c4b3b340e3c307b5c84f736674cc51d72192fbdd",
       "layout": {
         "storage": [
           {
@@ -288,7 +423,7 @@
             "slot": "302",
             "type": "t_address",
             "contract": "BraintrustMembershipNFT",
-            "src": "contracts/BNFT.sol:21"
+            "src": "contracts/BNFT.sol:25"
           },
           {
             "label": "baseURI",
@@ -296,31 +431,31 @@
             "slot": "303",
             "type": "t_string_storage",
             "contract": "BraintrustMembershipNFT",
-            "src": "contracts/BNFT.sol:22"
+            "src": "contracts/BNFT.sol:30"
           },
           {
             "label": "btrstErc20",
             "offset": 0,
             "slot": "304",
-            "type": "t_contract(IBTRST)3382",
+            "type": "t_contract(IBTRST)3408",
             "contract": "BraintrustMembershipNFT",
-            "src": "contracts/BNFT.sol:24"
+            "src": "contracts/BNFT.sol:36"
           },
           {
             "label": "unlockedDeposits",
             "offset": 0,
             "slot": "305",
-            "type": "t_mapping(t_address,t_struct(Profile)2611_storage)",
+            "type": "t_mapping(t_address,t_struct(Profile)2616_storage)",
             "contract": "BraintrustMembershipNFT",
-            "src": "contracts/BNFT.sol:25"
+            "src": "contracts/BNFT.sol:41"
           },
           {
             "label": "lockedDeposits",
             "offset": 0,
             "slot": "306",
-            "type": "t_mapping(t_address,t_array(t_struct(Profile)2611_storage)dyn_storage)",
+            "type": "t_mapping(t_address,t_array(t_struct(Profile)2616_storage)dyn_storage)",
             "contract": "BraintrustMembershipNFT",
-            "src": "contracts/BNFT.sol:26"
+            "src": "contracts/BNFT.sol:47"
           }
         ],
         "types": {
@@ -328,7 +463,7 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(Profile)2611_storage)dyn_storage": {
+          "t_array(t_struct(Profile)2616_storage)dyn_storage": {
             "label": "struct BraintrustMembershipNFT.Profile[]",
             "numberOfBytes": "32"
           },
@@ -348,11 +483,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IBTRST)3382": {
+          "t_contract(IBTRST)3408": {
             "label": "contract IBTRST",
             "numberOfBytes": "20"
           },
-          "t_mapping(t_address,t_array(t_struct(Profile)2611_storage)dyn_storage)": {
+          "t_mapping(t_address,t_array(t_struct(Profile)2616_storage)dyn_storage)": {
             "label": "mapping(address => struct BraintrustMembershipNFT.Profile[])",
             "numberOfBytes": "32"
           },
@@ -364,7 +499,7 @@
             "label": "mapping(address => mapping(address => bool))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Profile)2611_storage)": {
+          "t_mapping(t_address,t_struct(Profile)2616_storage)": {
             "label": "mapping(address => struct BraintrustMembershipNFT.Profile)",
             "numberOfBytes": "32"
           },
@@ -392,7 +527,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(Profile)2611_storage": {
+          "t_struct(Profile)2616_storage": {
             "label": "struct BraintrustMembershipNFT.Profile",
             "members": [
               {
