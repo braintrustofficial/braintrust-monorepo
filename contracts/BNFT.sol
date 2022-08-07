@@ -101,6 +101,7 @@ contract BraintrustMembershipNFT is
         _disableInitializers();
     }
 
+    // standard oz function
     function initialize(
         address _relayer,
         address _btrstErc20,
@@ -115,6 +116,7 @@ contract BraintrustMembershipNFT is
         setBaseURI(_baseURL);
     }
 
+    // standard oz function
     function _authorizeUpgrade(address newImplementation)
         internal
         override
