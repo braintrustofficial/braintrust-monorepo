@@ -15,9 +15,6 @@ const func: DeployFunction = async ({
     const baseURL = "https://gateway.pinata.cloud/ipfs/QmRu5rKug5rUMnn7s6kP9uPy7meZcSTMZhpTGt5rk6w8Uj/";
     const btrstERC20 = namedAccounts.btrstERC20;
 
-    console.log(namedAccounts);
-    // process.exit(0);
-
     await deploy("BraintrustMembershipNFT", {
         contract: 'BraintrustMembershipNFT',
         from: deployer,
@@ -27,7 +24,7 @@ const func: DeployFunction = async ({
             proxyContract: 'OpenZeppelinTransparentProxy',
             execute: {
                 init: {
-                    methodName: 'initialize',
+                    methodName: 'initialize', // todo - not sure why this function is not being called by hardhat deploy after contract successfully deploys
                     args: [relayer, btrstERC20, baseURL],
                 },
             },
