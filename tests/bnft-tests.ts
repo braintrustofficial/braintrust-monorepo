@@ -277,11 +277,10 @@ describe("BNFT", () => {
         expect(await bnft.getTotalLockedDepositAmount(freelancer.address)).to.equal(2)
       });
 
-      // TODO: I NEED TO SPEND TIME TO FIND OUT WHY THIS IS NOT WORKING CORRECTLY!!!
-      it.skip("should emit correct event", async () => {
+      it("should emit correct event", async () => {
         await fundRelayerApproveBtrstSafemintAndLock(10, 10, 10, 4 * DAY);
         await simulateTimeTravel(4 * DAY);
-        await expect(bnft.connect(freelancer).withdrawLockedDeposit(10, 0)).to.emit(bnft, `LockedDepositWithdrawn("${freelancer.address}", 10, 0)`)
+        await expect(bnft.connect(freelancer).withdrawLockedDeposit(10, 0)).to.emit(bnft, "LockedDepositWithdrawn").withArgs(freelancer.address, 10, 0)
       });
 
     });
