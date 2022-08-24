@@ -84,7 +84,13 @@ describe("BNFT", () => {
 
       it("should allow the relayer address call safemint() succcessfully", async () => {
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        expect(await bnft.ownerOf(0)).to.equal(freelancer.address);
+        expect(await bnft.ownerOf(1)).to.equal(freelancer.address);
+      });
+
+      it("should not allow user to mint more than one BNFT", async () => {
+        await bnft.connect(relayer).safeMint(freelancer.address, externalId);
+        await expect(bnft.connect(relayer).safeMint(freelancer.address, externalId)).revertedWith("UserAlreadyMintedNFT");
+
       });
 
       it("should emit the correct event", async () => {
@@ -93,14 +99,14 @@ describe("BNFT", () => {
 
       it("should return the correct tokenURI", async () => {
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        expect(await bnft.tokenURI(0)).to.be.eq(`${baseURL}0`)
+        expect(await bnft.tokenURI(1)).to.be.eq(`${baseURL}1`)
       });
     });
 
     describe("#_beforeTokenTransfer()", () => {
-      it.only("should prevent braintrust membership NFT token tranfers", async () => {
+      it("should prevent braintrust membership NFT token tranfers", async () => {
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        await expect(bnft.connect(freelancer).transferFrom(freelancer.address, randomSigner.address, 0)).revertedWith("TransferNotAllowed()");
+        await expect(bnft.connect(freelancer).transferFrom(freelancer.address, randomSigner.address, 1)).revertedWith("TransferNotAllowed()");
       });
 
     });
@@ -110,7 +116,7 @@ describe("BNFT", () => {
         await btrst.connect(btrstContractOwner).transfer(freelancer.address, 10);
         await btrst.connect(freelancer).approve(bnft.address, 10);
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        await bnft.connect(freelancer).deposit(10, 0, freelancer.address, externalId);
+        await bnft.connect(freelancer).deposit(10, 1, freelancer.address);
         expect(await bnft.getTotalUnlockedDeposit(freelancer.address)).to.equal(10);
       });
 
@@ -118,36 +124,43 @@ describe("BNFT", () => {
         await btrst.connect(btrstContractOwner).transfer(freelancer.address, 10);
         await btrst.connect(freelancer).approve(bnft.address, 10);
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        await bnft.connect(freelancer).deposit(5, 0, freelancer.address, externalId);
-        await bnft.connect(freelancer).deposit(5, 0, freelancer.address, externalId);
+        await bnft.connect(freelancer).deposit(5, 1, freelancer.address);
+        await bnft.connect(freelancer).deposit(5, 1, freelancer.address);
         expect(await bnft.getTotalUnlockedDeposit(freelancer.address)).to.equal(10);
       });
 
       it("should not be able to deposit if signer does not own $btrst ", async () => {
         await btrst.connect(freelancer).approve(bnft.address, 10);
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        await expect(bnft.connect(freelancer).deposit(10, 0, freelancer.address, externalId)).revertedWith("BTRST::_transferTokens: transfer amount exceeds balance");
+        await expect(bnft.connect(freelancer).deposit(10, 1, freelancer.address)).revertedWith("BTRST::_transferTokens: transfer amount exceeds balance");
       });
 
       it("should fail to deposit if no membership NFT exists in sender's wallet", async () => {
         await btrst.connect(btrstContractOwner).transfer(freelancer.address, 10);
         await btrst.connect(freelancer).approve(bnft.address, 10);
         await bnft.connect(relayer).safeMint(randomSigner.address, externalId);
-        await expect(bnft.connect(freelancer).deposit(10, 0, freelancer.address, externalId)).revertedWith(`NoMembershipNftInWallet("${freelancer.address}")`);
+        await expect(bnft.connect(freelancer).deposit(10, 1, freelancer.address)).revertedWith(`NoMembershipNftInWallet("${freelancer.address}")`);
       });
 
       it("should fail to deposit if attempting to pass an NFT that does not belong to sender's wallet", async () => {
         await btrst.connect(btrstContractOwner).transfer(relayer.address, 10);
         await btrst.connect(relayer).approve(bnft.address, 10);
         await bnft.connect(relayer).safeMint(randomSigner.address, externalId);
-        await expect(bnft.connect(relayer).deposit(10, 0, freelancer.address, externalId)).revertedWith(`NoMembershipNftInWallet("${freelancer.address}")`);
+        await expect(bnft.connect(relayer).deposit(10, 1, freelancer.address)).revertedWith(`NoMembershipNftInWallet("${freelancer.address}")`);
+      });
+
+      it("should fail to deposit zero amount", async () => {
+        await btrst.connect(btrstContractOwner).transfer(relayer.address, 10);
+        await btrst.connect(relayer).approve(bnft.address, 10);
+        await bnft.connect(relayer).safeMint(randomSigner.address, externalId);
+        await expect(bnft.connect(relayer).deposit(0, 1, freelancer.address)).revertedWith(`ZeroDeposit`);
       });
 
       it("should emit the correct event when deposit is successful", async () => {
         await btrst.connect(btrstContractOwner).transfer(freelancer.address, 10);
         await btrst.connect(freelancer).approve(bnft.address, 10);
         await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-        await expect(bnft.connect(freelancer).deposit(10, 0, freelancer.address, externalId)).to.emit(bnft, "Deposited")
+        await expect(bnft.connect(freelancer).deposit(10, 1, freelancer.address)).to.emit(bnft, "Deposited")
       });
 
     });
@@ -165,40 +178,49 @@ describe("BNFT", () => {
       await btrst.connect(btrstContractOwner).transfer(freelancer.address, fundAmount);
       await btrst.connect(freelancer).approve(bnft.address, approveAmount);
       await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-      await bnft.connect(freelancer).deposit(depositAmount, 0, freelancer.address, externalId);
+      await bnft.connect(freelancer).deposit(depositAmount, 1, freelancer.address);
     }
 
     async function fundRelayerApproveBtrstSafemintAndLock(fundAmount: number, approveAmount: number, depositAmount: number, availableTimeInSeconds: number) {
       await btrst.connect(btrstContractOwner).transfer(relayer.address, fundAmount);
       await btrst.connect(relayer).approve(bnft.address, approveAmount);
-      await bnft.connect(relayer).safeMint(freelancer.address, externalId);
-      await bnft.connect(relayer).lock(depositAmount, 0, freelancer.address, availableTimeInSeconds, externalId);
+
+      // we only trigger mint if user has no membership nft.
+      const balance = await bnft.balanceOf(freelancer.address);
+      if (balance == 0) {
+        await bnft.connect(relayer).safeMint(freelancer.address, externalId);
+      }
+      await bnft.connect(relayer).lock(depositAmount, 1, freelancer.address, availableTimeInSeconds, externalId);
     }
 
     describe("#lock()", () => {
       it("should allow relayer address call lock()", async () => {
         await fundApproveBtrstAndSafemint(freelancer, 10, 10, bnft.address)
-        await bnft.connect(relayer).lock(10, 0, freelancer.address, 365, externalId);
+        await bnft.connect(relayer).lock(10, 1, freelancer.address, 30 * DAY, externalId);
         expect(await btrst.balanceOf(bnft.address)).to.eq(10);
       });
 
       it("should add a new entry in lockedDeposits mapping against the beneficiary", async () => {
         await fundApproveBtrstAndSafemint(freelancer, 10, 10, bnft.address)
-        await bnft.connect(relayer).lock(10, 0, freelancer.address, 365, externalId);
+        await bnft.connect(relayer).lock(10, 1, freelancer.address,  30 * DAY, externalId);
         const [_, btrstAmount] = await bnft.getLockedDepositByIndex(freelancer.address, 0);
         expect(btrstAmount).to.eq(10);
       });
 
       it("should be able to lock more entries in lockedDeposits mapping against the beneficiary", async () => {
         await fundApproveBtrstAndSafemint(freelancer, 10, 10, bnft.address)
-        await bnft.connect(relayer).lock(8, 0, freelancer.address, 365, externalId);
-        await bnft.connect(relayer).lock(2, 0, freelancer.address, 365, externalId);
+        await bnft.connect(relayer).lock(8, 1, freelancer.address,  30 * DAY, externalId);
+        await bnft.connect(relayer).lock(2, 1, freelancer.address,  30 * DAY, externalId);
         const [_, btrstAmount] = await bnft.getLockedDepositByIndex(freelancer.address, 1);
         expect(btrstAmount).to.eq(2);
       });
 
       it("should not be able to lock if beneficiary does not own a Membership NFT", async () => {
-        await expect(bnft.connect(relayer).lock(10, 0, freelancer.address, 365, externalId)).revertedWith(`NoMembershipNftInWallet("${freelancer.address}")`);
+        await expect(bnft.connect(relayer).lock(10, 1, freelancer.address,  30 * DAY, externalId)).revertedWith(`NoMembershipNftInWallet("${freelancer.address}")`);
+      });
+
+      it("should not be able to lock if lock period is less than 30days", async () => {
+        await expect(bnft.connect(relayer).lock(10, 1, freelancer.address,  29 * DAY, externalId)).revertedWith(`InsufficientLockPeriod()`);
       });
 
       it("should not be able to lock if provided NFT does not belong to beneficiary", async () => {
@@ -209,7 +231,7 @@ describe("BNFT", () => {
         // mint NFT 1 to a freelancer
         await fundApproveBtrstAndSafemint(freelancer, 10, 10, bnft.address)
 
-        await expect(bnft.connect(relayer).lock(10, 0, freelancer.address, 365, externalId)).revertedWith(`NftDoesNotBelongToBeneficiary(0, "${freelancer.address}")`);
+        await expect(bnft.connect(relayer).lock(10, 1, freelancer.address,  30 * DAY, externalId)).revertedWith(`NftDoesNotBelongToBeneficiary(1, "${freelancer.address}")`);
       });
 
     });
@@ -245,7 +267,7 @@ describe("BNFT", () => {
 
     describe("#withdrawLockedDeposit()", () => {
       it("should not be able to withdraw more their locked balance", async () => {
-        await fundRelayerApproveBtrstSafemintAndLock(10, 10, 10, 0);
+        await fundRelayerApproveBtrstSafemintAndLock(10, 10, 10, 1);
         await expect(bnft.connect(freelancer).withdrawLockedDeposit(40, 0)).to.revertedWith("InsufficientBalance()");
       });
 
@@ -277,11 +299,10 @@ describe("BNFT", () => {
         expect(await bnft.getTotalLockedDepositAmount(freelancer.address)).to.equal(2)
       });
 
-      // TODO: I NEED TO SPEND TIME TO FIND OUT WHY THIS IS NOT WORKING CORRECTLY!!!
-      it.skip("should emit correct event", async () => {
+      it("should emit correct event", async () => {
         await fundRelayerApproveBtrstSafemintAndLock(10, 10, 10, 4 * DAY);
         await simulateTimeTravel(4 * DAY);
-        await expect(bnft.connect(freelancer).withdrawLockedDeposit(10, 0)).to.emit(bnft, `LockedDepositWithdrawn("${freelancer.address}", 10, 0)`)
+        await expect(bnft.connect(freelancer).withdrawLockedDeposit(10, 0)).to.emit(bnft, "LockedDepositWithdrawn").withArgs(freelancer.address, 10, 0)
       });
 
     });
