@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.11;
+pragma solidity 0.8.11;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -30,7 +30,7 @@ contract BraintrustMembershipNFT is
     string public baseURI;
 
     /**
-     * @notice The Membership NFT base URI`.
+     * @notice The Braintrust ERC-20 token.
      */
 
     IBTRST btrstErc20;
@@ -51,13 +51,11 @@ contract BraintrustMembershipNFT is
      * @param nftTokenId The braintrust membership NFT of the beneficiary.
      * @param btrstAmount The amount of $BTRST.
      * @param available The time which deposit amount becomes unlocked in the case of a locked deposit.
-     * @param externalId The offchain ID of the beneficiary.
      */
     struct Profile {
         uint256 nftTokenId;
         uint256 btrstAmount;
         uint256 available;
-        uint256 externalId;
     }
 
     //errors
@@ -70,14 +68,17 @@ contract BraintrustMembershipNFT is
     error LockPeriodNotReached();
     error InsufficientBalance();
     error TransferNotAllowed();
+    error UserAlreadyMintedNFT(address to);
+    error ZeroDeposit();
+    error InsufficientLockPeriod();
+    error AddressZero();
 
     //events
-    event NftMinted(address indexed sender, uint256 amount, uint256 externalId);
-    event Deposited(address indexed sender, uint256 amount, uint256 externalId);
+    event NftMinted(address indexed sender, uint256 amount);
+    event Deposited(address indexed sender, uint256 amount);
     event DepositLocked(
         address indexed sender,
-        uint256 amount,
-        uint256 externalId
+        uint256 amount
     );
     event UnlockedDepositWithdrawn(address indexed sender, uint256 amount);
     event LockedDepositWithdrawn(
@@ -85,6 +86,7 @@ contract BraintrustMembershipNFT is
         uint256 amount,
         uint256 index
     );
+    event RelayerChanged(address oldRelayer, address newRelayer);
 
     /**
      * @notice Used when only the relayer address is allowed to perform a call.
@@ -114,6 +116,9 @@ contract BraintrustMembershipNFT is
         relayer = _relayer;
         btrstErc20 = IBTRST(_btrstErc20);
         setBaseURI(_baseURL);
+
+        // NFT tokenID starts from 1
+        _tokenIdCounter.increment();
     }
 
     // standard oz function
@@ -134,7 +139,7 @@ contract BraintrustMembershipNFT is
         address to,
         uint256 tokenId
     ) internal override {
-        // NFT cannot be transfered across wallets. Only mint is enabled.
+        // NFT cannot be transferred across wallets. Only mint is enabled.
         if (from != address(0)) {
             revert TransferNotAllowed();
         }
@@ -163,39 +168,49 @@ contract BraintrustMembershipNFT is
      * @param newRelayer The new relayer address value.
      */
     function setRelayer(address newRelayer) public onlyOwner {
+        if (newRelayer == address(0)) {
+            revert AddressZero();
+        }
+        address oldRelayer = relayer;
         relayer = newRelayer;
+        emit RelayerChanged(oldRelayer, newRelayer);
     }
 
     /**
      * @notice Mints a new NFT to a specified address.
      * @param to The beneficiary address to mint to.
-     * @param externalId The offchain ID of the beneficiary.
      */
-    function safeMint(address to, uint256 externalId) public onlyRelayer {
+    function safeMint(address to) public onlyRelayer {
+        if (balanceOf(to) > 0) {
+            revert UserAlreadyMintedNFT(to);
+        }
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
-        emit NftMinted(to, tokenId, externalId);
+        emit NftMinted(to, tokenId);
     }
 
     /**
      * @notice Enables a deposit of $BTRST ERC20 to this contract on behalf of a beneficiary.
-     * The cummulative deposit is used offchain to determine a user's level. A deposit is only
+     * The cumulative deposit is used off-chain to determine a user's level. A deposit is only
      * successful if the beneficiary's wallet already contains a braintrust membership NFT.
-     * This function is idealy called by the beneficiary, but ultimately anyone who calls it
+     * This function is ideally called by the beneficiary, but ultimately anyone who calls it
      * should have enough $BTRST, and should have already approved this contract to spend it.
+     * Business Rule? A deposit will only succeed if a beneficiary already has a membership NFT.
      * @param amount The amount of $BTRST being deposited.
      * @param nftTokenId The braintrust membership NFT token ID of the beneficiary.
      * @param beneficiary The beneficiary address.
-     * @param externalId The offchain ID of the beneficiary.
      */
     function deposit(
         uint256 amount,
         uint256 nftTokenId,
-        address beneficiary,
-        uint256 externalId
+        address beneficiary
     ) external {
-        if (balanceOf(msg.sender) <= 0) {
+        if (amount == 0) {
+            revert ZeroDeposit();
+        }
+
+        if (balanceOf(beneficiary) <= 0) {
             revert NoMembershipNftInWallet(beneficiary);
         }
 
@@ -204,38 +219,38 @@ contract BraintrustMembershipNFT is
         }
 
         // we only set nft id once, but increment deposit amount every time.
-        // available is always left as 0, since there is no unlock time for unlocked deponsits.
+        // available is always left as 0, since there is no unlock time for unlocked deposits.
         if (unlockedDeposits[beneficiary].nftTokenId == 0) {
             unlockedDeposits[beneficiary].nftTokenId = nftTokenId;
         }
 
-        if (unlockedDeposits[beneficiary].externalId == 0) {
-            unlockedDeposits[beneficiary].externalId = externalId;
-        }
-
         unlockedDeposits[beneficiary].btrstAmount += amount;
+
         btrstErc20.transferFrom(msg.sender, address(this), amount);
-        emit Deposited(beneficiary, amount, externalId);
+        emit Deposited(beneficiary, amount);
     }
 
     /**
      * @notice Enables a locked deposit of $BTRST ERC20 to this contract on behalf of a beneficiary.
      * A locked deposit is different from an ordinary deposit mainly because it is frozen on this contract
      * until the available time has elapsed.
-     * The cummulative deposit is used offchain to determine a user's level. A locked deposit is only
+     * The cumulative deposit is used off-chain to determine a user's level. A locked deposit is only
      * successful if a beneficiary's wallet already contains a braintrust membership NFT.
      * @param amount The amount of $BTRST being deposited.
      * @param nftTokenId The braintrust membership NFT token ID of the beneficiary.
      * @param beneficiary The beneficiary address.
-     * @param externalId The offchain ID of the beneficiary.
      */
     function lock(
         uint256 amount,
         uint256 nftTokenId,
         address beneficiary,
-        uint256 availableTimeInSeconds,
-        uint256 externalId
+        uint256 availableTimeInSeconds
     ) external {
+        // availableTimeInSeconds must be greater than 30 days.
+        if (availableTimeInSeconds < 30 * 24 * 3600) {
+            revert InsufficientLockPeriod();
+        }
+
         if (balanceOf(beneficiary) <= 0) {
             revert NoMembershipNftInWallet(beneficiary);
         }
@@ -246,11 +261,12 @@ contract BraintrustMembershipNFT is
         }
 
         uint256 available = availableTimeInSeconds + block.timestamp;
+
         lockedDeposits[beneficiary].push(
-            Profile(nftTokenId, amount, available, externalId)
+            Profile(nftTokenId, amount, available)
         );
         btrstErc20.transferFrom(msg.sender, address(this), amount);
-        emit DepositLocked(beneficiary, amount, externalId);
+        emit DepositLocked(beneficiary, amount);
     }
 
     /**
@@ -284,14 +300,14 @@ contract BraintrustMembershipNFT is
         ) {
             revert LockPeriodNotReached();
         }
-        // check if user has enlught deposit, they can withdraw
+        // check if user has enough deposit, they can withdraw
         if (amount > lockedDeposits[msg.sender][withdrawalIndex].btrstAmount) {
             revert InsufficientBalance();
         }
 
         lockedDeposits[msg.sender][withdrawalIndex].btrstAmount -= amount;
         uint256 len = lockedDeposits[msg.sender].length;
-        // if btstamount is now zero, then delete it from mapping
+        // if btrstAmount is now zero, then delete it from mapping
         if (lockedDeposits[msg.sender][withdrawalIndex].btrstAmount == 0) {
             lockedDeposits[msg.sender][withdrawalIndex] = lockedDeposits[
                 msg.sender
@@ -324,13 +340,11 @@ contract BraintrustMembershipNFT is
      * @return The corresponding `nftTokenId`.
      * @return The corresponding `btrstAmount`.
      * @return The corresponding `available`.
-     * @return The corresponding `externalId`.
      */
     function getLockedDepositByIndex(address _address, uint256 index)
         public
         view
         returns (
-            uint256,
             uint256,
             uint256,
             uint256
@@ -340,13 +354,13 @@ contract BraintrustMembershipNFT is
         return (
             _lockedDeposit.nftTokenId,
             _lockedDeposit.btrstAmount,
-            _lockedDeposit.available,
-            _lockedDeposit.externalId
+            _lockedDeposit.available
         );
     }
 
     /**
      * @notice Returns the total locked deposits for a given wallet.
+     *  @notice NOTE: intented for off-chain.
      * @param _address The address to check.
      * @return total The total locked deposits amount.
      */
@@ -367,11 +381,11 @@ contract BraintrustMembershipNFT is
 
     /**
      * @notice Returns the total locked deposits for a given wallet.
+     *  @notice NOTE: intented for off-chain.
      * @param _address The address to check.
      * @return nftTokenTokenIds The corresponding `nftTokenId`s.
      * @return btrstAmounts The corresponding `btrstAmount`s.
      * @return availableTimes The corresponding `available`s.
-     * @return externalIds The corresponding `externalId`s.
      */
     function getTotalLockedDepositByAddress(address _address)
         public
@@ -379,24 +393,21 @@ contract BraintrustMembershipNFT is
         returns (
             uint256[] memory nftTokenTokenIds,
             uint256[] memory btrstAmounts,
-            uint256[] memory availableTimes,
-            uint256[] memory externalIds
+            uint256[] memory availableTimes
         )
     {
         uint256 len = lockedDeposits[_address].length;
         nftTokenTokenIds = new uint256[](len);
         btrstAmounts = new uint256[](len);
         availableTimes = new uint256[](len);
-        externalIds = new uint256[](len);
 
         for (uint256 i = 0; i < len; i++) {
             Profile memory _lockedDeposit = lockedDeposits[_address][i];
             nftTokenTokenIds[i] = _lockedDeposit.nftTokenId;
             btrstAmounts[i] = _lockedDeposit.btrstAmount;
             availableTimes[i] = _lockedDeposit.available;
-            externalIds[i] = _lockedDeposit.externalId;
         }
 
-        return (nftTokenTokenIds, btrstAmounts, availableTimes, externalIds);
+        return (nftTokenTokenIds, btrstAmounts, availableTimes);
     }
 }
