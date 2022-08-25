@@ -51,7 +51,6 @@ contract BraintrustMembershipNFT is
      * @param nftTokenId The braintrust membership NFT of the beneficiary.
      * @param btrstAmount The amount of $BTRST.
      * @param available The time which deposit amount becomes unlocked in the case of a locked deposit.
-     * @param externalId The off-chain ID of the beneficiary.
      */
     struct Profile {
         uint256 nftTokenId;
@@ -75,12 +74,11 @@ contract BraintrustMembershipNFT is
     error AddressZero();
 
     //events
-    event NftMinted(address indexed sender, uint256 amount, uint256 externalId);
-    event Deposited(address indexed sender, uint256 amount, uint256 externalId);
+    event NftMinted(address indexed sender, uint256 amount);
+    event Deposited(address indexed sender, uint256 amount);
     event DepositLocked(
         address indexed sender,
-        uint256 amount,
-        uint256 externalId
+        uint256 amount
     );
     event UnlockedDepositWithdrawn(address indexed sender, uint256 amount);
     event LockedDepositWithdrawn(
@@ -181,16 +179,15 @@ contract BraintrustMembershipNFT is
     /**
      * @notice Mints a new NFT to a specified address.
      * @param to The beneficiary address to mint to.
-     * @param externalId The off-chain ID of the beneficiary.
      */
-    function safeMint(address to, uint256 externalId) public onlyRelayer {
+    function safeMint(address to) public onlyRelayer {
         if (balanceOf(to) > 0) {
             revert UserAlreadyMintedNFT(to);
         }
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
-        emit NftMinted(to, tokenId, externalId);
+        emit NftMinted(to, tokenId);
     }
 
     /**
@@ -228,10 +225,9 @@ contract BraintrustMembershipNFT is
         }
 
         unlockedDeposits[beneficiary].btrstAmount += amount;
-        uint256 externalId = unlockedDeposits[beneficiary].externalId;
 
         btrstErc20.transferFrom(msg.sender, address(this), amount);
-        emit Deposited(beneficiary, amount, externalId);
+        emit Deposited(beneficiary, amount);
     }
 
     /**
@@ -270,7 +266,7 @@ contract BraintrustMembershipNFT is
             Profile(nftTokenId, amount, available)
         );
         btrstErc20.transferFrom(msg.sender, address(this), amount);
-        emit DepositLocked(beneficiary, amount, externalId);
+        emit DepositLocked(beneficiary, amount);
     }
 
     /**
@@ -344,13 +340,11 @@ contract BraintrustMembershipNFT is
      * @return The corresponding `nftTokenId`.
      * @return The corresponding `btrstAmount`.
      * @return The corresponding `available`.
-     * @return The corresponding `externalId`.
      */
     function getLockedDepositByIndex(address _address, uint256 index)
         public
         view
         returns (
-            uint256,
             uint256,
             uint256,
             uint256
@@ -360,8 +354,7 @@ contract BraintrustMembershipNFT is
         return (
             _lockedDeposit.nftTokenId,
             _lockedDeposit.btrstAmount,
-            _lockedDeposit.available,
-            _lockedDeposit.externalId
+            _lockedDeposit.available
         );
     }
 
@@ -393,7 +386,6 @@ contract BraintrustMembershipNFT is
      * @return nftTokenTokenIds The corresponding `nftTokenId`s.
      * @return btrstAmounts The corresponding `btrstAmount`s.
      * @return availableTimes The corresponding `available`s.
-     * @return externalIds The corresponding `externalId`s.
      */
     function getTotalLockedDepositByAddress(address _address)
         public
@@ -401,24 +393,21 @@ contract BraintrustMembershipNFT is
         returns (
             uint256[] memory nftTokenTokenIds,
             uint256[] memory btrstAmounts,
-            uint256[] memory availableTimes,
-            uint256[] memory externalIds
+            uint256[] memory availableTimes
         )
     {
         uint256 len = lockedDeposits[_address].length;
         nftTokenTokenIds = new uint256[](len);
         btrstAmounts = new uint256[](len);
         availableTimes = new uint256[](len);
-        externalIds = new uint256[](len);
 
         for (uint256 i = 0; i < len; i++) {
             Profile memory _lockedDeposit = lockedDeposits[_address][i];
             nftTokenTokenIds[i] = _lockedDeposit.nftTokenId;
             btrstAmounts[i] = _lockedDeposit.btrstAmount;
             availableTimes[i] = _lockedDeposit.available;
-            externalIds[i] = _lockedDeposit.externalId;
         }
 
-        return (nftTokenTokenIds, btrstAmounts, availableTimes, externalIds);
+        return (nftTokenTokenIds, btrstAmounts, availableTimes);
     }
 }
