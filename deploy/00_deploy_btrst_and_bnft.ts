@@ -12,7 +12,7 @@ const func: DeployFunction = async ({
     const deployer = namedAccounts.deployer;
     const relayer = namedAccounts.relayer;
     const multisig = namedAccounts.multisig;
-    const baseURL = "https://gateway.pinata.cloud/ipfs/QmRu5rKug5rUMnn7s6kP9uPy7meZcSTMZhpTGt5rk6w8Uj/";
+    const baseURL = "https://app9.bthexocean.com/nft/metadata/";
 
     console.log("----------------------------------------------------");
     console.log(`Deploying BTRST with: { deployer: ${deployer}, foundationInitialAddress: ${deployer} }}`);
