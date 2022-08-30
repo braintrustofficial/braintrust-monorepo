@@ -13,7 +13,7 @@ const func: DeployFunction = async ({
     const relayer = namedAccounts.relayer;
     const multisig = namedAccounts.multisig;
     const btrstERC20 = namedAccounts.btrstERC20;
-    const baseURL = "https://gateway.pinata.cloud/ipfs/QmRu5rKug5rUMnn7s6kP9uPy7meZcSTMZhpTGt5rk6w8Uj/";
+    const baseURL = "https://app9.bthexocean.com/nft/metadata/";
     console.log(`Deploying BNFT with: { deployer: ${deployer}, relayer: ${relayer} }}`);
 
     const bnft = await deploy("BraintrustMembershipNFT", {
