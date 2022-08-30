@@ -113,7 +113,7 @@ contract BraintrustMembershipNFT is
         __Ownable_init();
         __UUPSUpgradeable_init();
 
-        relayer = _relayer;
+        setRelayer(_relayer);
         btrstErc20 = IBTRST(_btrstErc20);
         setBaseURI(_baseURL);
 

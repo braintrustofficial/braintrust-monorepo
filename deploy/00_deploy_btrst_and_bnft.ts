@@ -12,8 +12,17 @@ const func: DeployFunction = async ({
     const deployer = namedAccounts.deployer;
     const relayer = namedAccounts.relayer;
     const multisig = namedAccounts.multisig;
-    const btrstERC20 = namedAccounts.btrstERC20;
     const baseURL = "https://gateway.pinata.cloud/ipfs/QmRu5rKug5rUMnn7s6kP9uPy7meZcSTMZhpTGt5rk6w8Uj/";
+
+    console.log("----------------------------------------------------");
+    console.log(`Deploying BTRST with: { deployer: ${deployer}, foundationInitialAddress: ${deployer} }}`);
+    const btrst = await deploy('BTRST', {
+        from: deployer,
+        args: [deployer],
+    });
+    console.log("BTRST deployed to: ", btrst.address);
+
+    console.log("----------------------------------------------------");
     console.log(`Deploying BNFT with: { deployer: ${deployer}, relayer: ${relayer} }}`);
 
     const bnft = await deploy("BraintrustMembershipNFT", {
@@ -26,7 +35,7 @@ const func: DeployFunction = async ({
             execute: {
                 init: {
                     methodName: 'initialize', // todo - not sure why this function is not being called by hardhat deploy after contract successfully deploys
-                    args: [relayer, btrstERC20, baseURL],
+                    args: [relayer, btrst.address, baseURL],
                 },
             },
         },
@@ -37,6 +46,6 @@ const func: DeployFunction = async ({
 };
 
 func.id = "deploy_bnft";
-func.tags = ["BNFT", "main"];
+func.tags = ["BTRST", "dev"];
 func.dependencies = [];
 export default func;
