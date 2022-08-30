@@ -20,13 +20,12 @@ module.exports = {
   typechain: {
     target: "ethers-v5",
   },
-  // defaultNetwork: "goerli",
+   defaultNetwork: "goerli",
   etherscan: {
     apiKey: etherscanApiKey
   },
   networks: {
-    hardhat: {},
-    local: {
+    localhost: {
       url: "http://localhost:8545",
     },
     goerli: {
@@ -49,7 +48,7 @@ module.exports = {
     },
     btrstERC20: {
       default: "0x2d5eb40e24615cA3415d3cC6961Bc2e9Ca2582D7",
-      goerli: "0x2d5eb40e24615cA3415d3cC6961Bc2e9Ca2582D7" // on mainnet this should point to main btrst contract
+      goerli: "0x6217709D70B69DD0227A290fF2f3a0294bCFEeF9" // on mainnet this should point to main btrst contract
     }
   },
   solidity: {
