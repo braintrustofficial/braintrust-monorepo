@@ -251,6 +251,10 @@ contract BraintrustMembershipNFT is
             revert InsufficientLockPeriod();
         }
 
+        if (amount == 0) {
+            revert ZeroDeposit();
+        }
+
         if (balanceOf(beneficiary) <= 0) {
             revert NoMembershipNftInWallet(beneficiary);
         }
