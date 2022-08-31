@@ -230,6 +230,13 @@ describe("BNFT", () => {
         await expect(bnft.connect(relayer).lock(10, 1, freelancer.address,  30 * DAY)).revertedWith(`NftDoesNotBelongToBeneficiary(1, "${freelancer.address}")`);
       });
 
+      it("should fail to lock zero amount", async () => {
+        await fundApproveBtrstAndSafemint(randomSigner, 10, 10, bnft.address)
+        await fundApproveBtrstAndSafemint(freelancer, 10, 10, bnft.address)
+
+        await expect(bnft.connect(relayer).lock(0, 1, freelancer.address,  30 * DAY)).revertedWith(`ZeroDeposit`);
+      });
+
     });
 
     describe("#withdrawUnlockedDeposit()", () => {
