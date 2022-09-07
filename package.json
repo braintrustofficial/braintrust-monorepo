@@ -41,6 +41,7 @@
     "test-coverage": "yarn run hardhat coverage",
     "deploy": "hardhat deploy --tags main",
     "deploy:dev": "hardhat deploy --tags dev --network localhost",
-    "verify": "npx hardhat verify --network goerli 0x6F427589164a1aF52CfBBd30305590F4e7ADD5b5"
+    "verify:testnet": "npx hardhat verify --network goerli 0x6F427589164a1aF52CfBBd30305590F4e7ADD5b5",
+    "verify": "npx hardhat verify --network mainnet 0x085198786b7C6A8F215A433Db8c4Ee4B1D15bbfC"
   }
 }
