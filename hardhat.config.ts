@@ -10,7 +10,7 @@ import { config } from "dotenv";
 config({ path: ".env" });
 
 const deployerPK = process.env.DEPLOYER_PK;
-const infuraProjectID = process.env.INFURA_PROJECT_ID;
+const nodeKey = process.env.NODE_KEY;
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
   typechain: {
     target: "ethers-v5",
   },
-   defaultNetwork: "goerli",
+   defaultNetwork: "mainnet",
   etherscan: {
     apiKey: etherscanApiKey
   },
@@ -29,7 +29,11 @@ module.exports = {
       url: "http://localhost:8545",
     },
     goerli: {
-      url: `https://goerli.infura.io/v3/${infuraProjectID}`,
+      url: `https://goerli.infura.io/v3/${nodeKey}`,
+      accounts: [`0x${deployerPK}`],
+    },
+    mainnet: {
+      url: `https://eth-mainnet.g.alchemy.com/v2/${nodeKey}`,
       accounts: [`0x${deployerPK}`],
     },
   },
@@ -37,18 +41,22 @@ module.exports = {
     deployer: {
       default: 0,
       goerli: 0,
+      mainnet: 0
     },
     multisig: {
       default: 0,
-      goerli: 0, // for now leave this same as deployer address, but on mainnet, we should change it to the provided multisig address
+      goerli: 0, 
+      mainnet: "0xE3857a42803D3f9de273a42c01DA5F05066F7CFc"
     },
     relayer: {
       default: 0,
       goerli: 0, // for now leave this same as deployer address, but on mainnet, we should change it to the provided relayer address
+      mainnet: "0xfc1f528e7da84732663b70ca52bdc0215b222d44"
     },
     btrstERC20: {
       default: "0x2d5eb40e24615cA3415d3cC6961Bc2e9Ca2582D7",
-      goerli: "0x6217709D70B69DD0227A290fF2f3a0294bCFEeF9" // on mainnet this should point to main btrst contract
+      goerli: "0x6C104B5A847dA440B0009C5C2D44006823d48214",
+      mainnet: "0x799ebfABE77a6E34311eeEe9825190B9ECe32824"
     }
   },
   solidity: {

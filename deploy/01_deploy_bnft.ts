@@ -13,7 +13,8 @@ const func: DeployFunction = async ({
     const relayer = namedAccounts.relayer;
     const multisig = namedAccounts.multisig;
     const btrstERC20 = namedAccounts.btrstERC20;
-    const baseURL = "https://app9.bthexocean.com/nft/metadata/";
+    const baseURL = process.env.BASE_URL;
+
     console.log(`Deploying BNFT with: { deployer: ${deployer}, relayer: ${relayer} }}`);
 
     const bnft = await deploy("BraintrustMembershipNFT", {
